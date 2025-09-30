@@ -18,7 +18,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Display trigger message
-        run: echo "Workflow triggered with message: ${{ github.event.inputs.log_message }}"
+        run: echo "test"
 
       - name: Run a simple build/test step
         run: |
@@ -26,8 +26,6 @@ jobs:
           echo "Simulating tests passed."
           # 実際のビルドやテストのコマンドをここに追加します
           
-  ---
-
   # Stage環境へのデプロイジョブ (承認はEnvironmentの設定に依存)
   deploy-to-stage:
     # buildジョブが成功した後に実行
@@ -47,8 +45,6 @@ jobs:
           echo "Deployment to Stage completed successfully."
           # 実際のデプロイコマンドをここに追加します
           
-  ---
-
   # Prod環境へのデプロイジョブ (承認はEnvironmentの設定に依存)
   deploy-to-prod:
     # deploy-to-stageジョブが成功した後に実行
