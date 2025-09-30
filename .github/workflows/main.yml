@@ -8,6 +8,12 @@ on:
   # GitHub ActionsのUIから手動で実行できるようにする
   workflow_dispatch:
 
+concurrency:
+  # このワークフローの実行をグループ化（ブランチ名も含む）
+  group: ${{ github.workflow }}-${{ github.ref }} 
+  # 新しい実行が始まったら、進行中（承認待ち含む）の古い実行をキャンセル
+  cancel-in-progress: true 
+
 jobs:
   # ビルドジョブ
   build:
