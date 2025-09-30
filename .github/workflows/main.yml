@@ -1,0 +1,69 @@
+name: Simple CI/CD with Environments
+
+on:
+  # 手動でワークフローをトリガーできるようにする
+  workflow_dispatch:
+    inputs:
+      log_message:
+        description: 'デプロイ時のメッセージ'
+        required: false
+        default: 'Manual deployment triggered.'
+
+jobs:
+  # ビルドジョブ
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Display trigger message
+        run: echo "Workflow triggered with message: ${{ github.event.inputs.log_message }}"
+
+      - name: Run a simple build/test step
+        run: |
+          echo "Building application..."
+          echo "Simulating tests passed."
+          # 実際のビルドやテストのコマンドをここに追加します
+          
+  ---
+
+  # Stage環境へのデプロイジョブ (承認はEnvironmentの設定に依存)
+  deploy-to-stage:
+    # buildジョブが成功した後に実行
+    needs: build
+    runs-on: ubuntu-latest
+    
+    # ここで環境を指定。stage環境の保護ルールが適用されます。
+    # このジョブは、設定された承認者が承認するまで待機します。
+    environment: 
+      name: stage
+      # environment url: 'https://stage.example.com' # オプションでURLを指定可能
+      
+    steps:
+      - name: Deploy to Stage
+        run: |
+          echo "Starting deployment to Stage environment..."
+          echo "Deployment to Stage completed successfully."
+          # 実際のデプロイコマンドをここに追加します
+          
+  ---
+
+  # Prod環境へのデプロイジョブ (承認はEnvironmentの設定に依存)
+  deploy-to-prod:
+    # deploy-to-stageジョブが成功した後に実行
+    needs: deploy-to-stage
+    runs-on: ubuntu-latest
+    
+    # ここで環境を指定。prod環境の保護ルールが適用されます。
+    # このジョブは、設定された承認者が承認するまで待機します。
+    environment: 
+      name: prod
+      # url: 'https://prod.example.com' # オプションでURLを指定可能
+
+    steps:
+      - name: Deploy to Production
+        run: |
+          echo "Starting deployment to Production environment..."
+          echo "Deployment to Production completed successfully."
+          # 実際のデプロイコマンドをここに追加します
