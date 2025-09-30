@@ -1,0 +1,32 @@
+name: dev workflow
+
+on:
+  # developブランチにpushされたら実行
+  push:
+    branches:
+      - develop
+  workflow_dispatch:
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Run CI/Build/Test
+        run: |
+          echo "Building and testing for Development environment..."
+          echo "Current branch: ${{ github.ref_name }}"
+
+  deploy-to-dev:
+    needs: build-and-test
+    runs-on: ubuntu-latest
+    
+    # 承認を通さない開発環境へのデプロイ
+    environment: 
+      name: dev # 開発環境（dev）
+      
+    steps:
+      - name: Deploy to Development
+        run: echo "Deployment to Development environment completed."
