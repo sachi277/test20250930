@@ -1,13 +1,12 @@
 name: Simple CI/CD with Environments
 
 on:
-  # 手動でワークフローをトリガーできるようにする
+  # mainブランチにpushされたら自動で実行
+  push:
+    branches:
+      - main
+  # GitHub ActionsのUIから手動で実行できるようにする
   workflow_dispatch:
-    inputs:
-      log_message:
-        description: 'デプロイ時のメッセージ'
-        required: false
-        default: 'Manual deployment triggered.'
 
 jobs:
   # ビルドジョブ
